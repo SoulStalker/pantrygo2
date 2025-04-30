@@ -176,8 +176,10 @@ func (uc *ArticleUseCase) Search(ctx context.Context, query string, tags []strin
 }
 
 //func (uc *ArticleUseCase) Delete(id uint) error { return uc.articleRepo.Delete(id) }
-//
-//func (uc *ArticleUseCase) List(limit, offset int) ([]*entity.Article, error) {
-//	return uc.articleRepo.List(limit, offset)
-//}
+
+// List выводит список статей с лимтом и офсетом
+func (uc *ArticleUseCase) List(ctx context.Context, limit, offset int) ([]*entity.Article, error) {
+	return uc.articleRepo.List(ctx, limit, offset)
+}
+
 //
