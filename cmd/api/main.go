@@ -1,7 +1,10 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/soulstalker/pantrygo2/internal/delivery/http"
 	"github.com/soulstalker/pantrygo2/internal/repository/postgres"
+	"github.com/soulstalker/pantrygo2/internal/usecase"
 	"github.com/spf13/viper"
 	"log"
 )
@@ -25,4 +28,24 @@ func main() {
 		log.Fatalf("Failed to connect to database: %w", err)
 	}
 
+	articleRepo := postgres.NewArticleRepo(db)
+	tagRepo := "todo"
+	mediaRepo := "todo"
+
+	articleUseCase := usecase.NewArticleUseCase(articleRepo, tagRepo, mediaRepo)
+
+	articleHandler := http.NewArticleHandler(articleUseCase)
+
+	router := gin.Default()
+
+	articleHandler.RegisterRoutes(router)
+
+	port := viper.GetString("server.port")
+	if port == "" {
+		port = "8080"
+	}
+
+	if err := router.Run(":" + port); err != nil {
+		log.Fatalf("Failed to start server: %s", err)
+	}
 }
